@@ -4,17 +4,23 @@ const {
   createUserValidationRules,
   updateUserValidationRules,
 } = require("../validations/userValidators");
+const auth = require("../middleware/auth");
 
-router.get("/", userController.getUsers);
+router.get("/", auth, userController.getUsers);
 
-router.get("/:id", userController.getUserById);
+router.get("/:id", auth, userController.getUserById);
 
-router.post("/", createUserValidationRules(), userController.createUser);
+router.delete("/:id", auth, userController.deleteUser);
 
-router.delete("/:id", userController.deleteUser);
-
-router.put("/:id", updateUserValidationRules(), userController.updateUser);
+router.put(
+  "/:id",
+  auth,
+  updateUserValidationRules(),
+  userController.updateUser
+);
 
 router.post("/login", userController.login);
+
+router.post("/signup", createUserValidationRules(), userController.signup);
 
 module.exports = router;

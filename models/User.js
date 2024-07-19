@@ -14,6 +14,7 @@ const userSchema = new mongoose.Schema({
   email: {
     type: String,
     required: true,
+    unique: true,
   },
   products: [
     {
@@ -42,5 +43,7 @@ userSchema.methods.toJSON = function () {
 };
 
 const User = mongoose.model("User", userSchema);
+
+User.createIndexes();
 
 module.exports = User;

@@ -2,6 +2,44 @@ const userService = require("../services/userService");
 const jsend = require("jsend");
 const { validationResult } = require("express-validator");
 
+const signup = async (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json(jsend.fail({ errors: errors.array() }));
+  }
+  try {
+    const { username, email, password } = req.body;
+    const { user, token } = await userService.signup(username, email, password);
+    res.cookie("token", token, {
+      httpOnly: true, // Ensures the cookie is only accessible by the web server
+      secure: true, // Ensures the cookie is sent over HTTPS only (recommended in production)
+      maxAge: 3600000, // 1 hour in milliseconds
+    });
+    res.json(jsend.success({ user }));
+  } catch (err) {
+    next(err);
+  }
+};
+
+const login = async (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json(jsend.fail({ errors: errors.array() }));
+  }
+  try {
+    const { email, password } = req.body;
+    const { user, token } = await userService.login(email, password);
+    res.cookie("token", token, {
+      httpOnly: true, // Ensures the cookie is only accessible by the web server
+      secure: true, // Ensures the cookie is sent over HTTPS only (recommended in production)
+      maxAge: 3600000, // 1 hour in milliseconds
+    });
+    res.json(jsend.success({ user }));
+  } catch (err) {
+    next(err);
+  }
+};
+
 const getUsers = async (req, res, next) => {
   try {
     const users = await userService.getUsers();
@@ -14,20 +52,6 @@ const getUsers = async (req, res, next) => {
 const getUserById = async (req, res, next) => {
   try {
     const user = await userService.getUserById(req.params.id);
-    res.json(jsend.success(user));
-  } catch (err) {
-    next(err);
-  }
-};
-
-const createUser = async (req, res, next) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json(jsend.fail({ errors: errors.array() }));
-  }
-  try {
-    const { username, email, password } = req.body;
-    const user = await userService.createUser(username, email, password);
     res.json(jsend.success(user));
   } catch (err) {
     next(err);
@@ -56,21 +80,10 @@ const updateUser = async (req, res, next) => {
   }
 };
 
-const login = async (req, res, next) => {
-  try {
-    const { email, password } = req.body;
-    const user = await userService.verifyUser(email, password);
-    console.log(user);
-    res.json(jsend.success(user));
-  } catch (err) {
-    next(err);
-  }
-};
-
 module.exports = {
   getUsers,
   getUserById,
-  createUser,
+  signup,
   deleteUser,
   updateUser,
   login,

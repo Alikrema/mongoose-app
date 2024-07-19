@@ -1,4 +1,5 @@
 const User = require("../models/User");
+const EmailAlreadyExistsError = require("../Errors/EmailAlreadyExistsError");
 
 const getUsers = async () => {
   try {
@@ -46,6 +47,9 @@ const createUser = async (username, email, password) => {
     await user.save();
     return user;
   } catch (err) {
+    if (err.code === 11000) {
+      throw new EmailAlreadyExistsError();
+    }
     throw new Error(err.message);
   }
 };
