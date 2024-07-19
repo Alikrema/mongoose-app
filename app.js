@@ -8,6 +8,7 @@ const connectDB = require("./config/db");
 const usersRouter = require("./routers/userRouter");
 const productRouter = require("./routers/productRouter");
 const emailRouter = require("./routers/emailRouter");
+const smsRouter = require("./routers/smsRouter");
 const UnauthorizedError = require("./Errors/UnauthorizedError");
 const EmailAlreadyExistsError = require("./Errors/EmailAlreadyExistsError");
 
@@ -26,6 +27,7 @@ app.get("/", (req, res) => {
 app.use("/users", usersRouter);
 app.use("/products", productRouter);
 app.use("/email", emailRouter);
+app.use("/sms", smsRouter);
 
 app.use((req, res, next) => {
   res.status(404).json(jsend.error({ message: "Not found", code: 404 }));
