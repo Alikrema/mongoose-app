@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const dbPath = process.env.MONGO_URI;
+const dbPath = "mongodb://localhost:27017/mongoose-sample";
 
 const connectDB = async () => {
   try {

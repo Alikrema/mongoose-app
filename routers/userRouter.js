@@ -1,20 +1,14 @@
 const router = require("express").Router();
 const userController = require("../controllers/userController");
-const {
-  createUserValidationRules,
-  updateUserValidationRules,
-} = require("../validations/userValidators");
 
 router.get("/", userController.getUsers);
 
 router.get("/:id", userController.getUserById);
 
-router.post("/", createUserValidationRules(), userController.createUser);
+router.post("/", userController.createUser);
 
 router.delete("/:id", userController.deleteUser);
 
-router.put("/:id", updateUserValidationRules(), userController.updateUser);
-
-router.post("/login", userController.login);
+router.put("/:id", userController.updateUser);
 
 module.exports = router;

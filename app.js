@@ -1,17 +1,13 @@
 const express = require("express");
 const jsend = require("jsend");
-require("dotenv").config();
-const cors = require("cors");
 
 const connectDB = require("./config/db");
 const usersRouter = require("./routers/userRouter");
 const productRouter = require("./routers/productRouter");
-const UnauthorizedError = require("./Errors/UnauthorizedError");
 
 connectDB();
 
 const app = express();
-app.use(cors());
 
 app.use(express.json());
 
@@ -28,11 +24,6 @@ app.use((req, res, next) => {
 
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  if (err instanceof UnauthorizedError) {
-    return res
-      .status(401)
-      .json(jsend.error({ message: err.message, code: 401 }));
-  }
   res.status(500).send(jsend.error({ message: "Something Broke!", code: 500 }));
 });
 
