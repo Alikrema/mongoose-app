@@ -13,6 +13,7 @@ const uploadRouter = require("./routers/uploadRouter");
 const UnauthorizedError = require("./Errors/UnauthorizedError");
 const EmailAlreadyExistsError = require("./Errors/EmailAlreadyExistsError");
 const UnsupportedFileType = require("./Errors/UnsupportedFileType");
+const multer = require("multer");
 
 connectDB();
 
@@ -49,14 +50,20 @@ app.use((err, req, res, next) => {
       .json(jsend.error({ message: err.message, code: 400 }));
   }
   if (err instanceof UnsupportedFileType) {
-    return res
-      .status(400)
-      .json(
-        jsend.error({
-          message: err.message || "Unsupported file type",
-          code: 400,
-        })
-      );
+    return res.status(400).json(
+      jsend.error({
+        message: err.message || "Unsupported file type",
+        code: 400,
+      })
+    );
+  }
+  if (err instanceof multer.MulterError) {
+    return res.status(400).json(
+      jsend.error({
+        message: err.message || "Multer error",
+        code: 400,
+      })
+    );
   }
   res.status(500).send(jsend.error({ message: "Something Broke!", code: 500 }));
 });
