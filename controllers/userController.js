@@ -4,7 +4,6 @@ const { validationResult } = require("express-validator");
 
 const getUsers = async (req, res, next) => {
   try {
-    throw new Error("This is an error");
     const users = await userService.getUsers();
     res.json(jsend.success(users));
   } catch (err) {
