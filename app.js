@@ -1,11 +1,11 @@
 const express = require("express");
 const jsend = require("jsend");
 
-const connectDB = require("./config/db");
+// const connectDB = require("./config/db");
 const usersRouter = require("./routers/userRouter");
 const productRouter = require("./routers/productRouter");
 
-connectDB();
+// connectDB();
 
 const app = express();
 
