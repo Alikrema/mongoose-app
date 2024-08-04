@@ -1,13 +1,16 @@
 const express = require("express");
 const jsend = require("jsend");
-
-// const connectDB = require("./config/db");
+const connectDB = require("./config/db");
 const usersRouter = require("./routers/userRouter");
 const productRouter = require("./routers/productRouter");
+const dotenv = require("dotenv");
+dotenv.config();
+const cors = require("cors");
 
-// connectDB();
+connectDB();
 
 const app = express();
+app.use(cors({ origin: "http://localhost:8001" }));
 
 app.use(express.json());
 
@@ -27,6 +30,6 @@ app.use((err, req, res, next) => {
   res.status(500).send(jsend.error({ message: "Something Broke!", code: 500 }));
 });
 
-app.listen(3000, () => {
-  console.log("Server is running on port 3000");
+app.listen(process.env.PORT || 3000, () => {
+  console.log(`Server is running on port ${process.env.PORT || 3000}`);
 });
